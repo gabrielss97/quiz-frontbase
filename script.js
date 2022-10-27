@@ -18,3 +18,67 @@ const quizData = [
     correct: "c",
   },
 ];
+
+let quizEl = document.querySelector("#quiz");
+let titleEl = document.querySelector("#title");
+let questionEl = document.querySelector("#question");
+let a = document.querySelector("#questionA");
+let b = document.querySelector("#questionB");
+let c = document.querySelector("#questionC");
+let d = document.querySelector("#questionD");
+const answerEls = document.querySelectorAll(".answer");
+const btnEl = document.querySelector("#btn");
+
+let currentQuiz = 0;
+let score = 0;
+
+loadQuiz();
+
+function loadQuiz() {
+  deselectAnswer();
+  const currentQuizData = quizData[currentQuiz];
+
+  titleEl.innerText = currentQuizData.title;
+  questionEl.innerText = currentQuizData.question;
+  a.innerText = currentQuizData.a;
+  b.innerText = currentQuizData.b;
+  c.innerText = currentQuizData.c;
+  d.innerText = currentQuizData.d;
+}
+
+function getSelected() {
+  let answer;
+  answerEls.forEach((answerEl) => {
+    if (answerEl.checked) {
+      answer = answerEl.id;
+    }
+  });
+  return answer;
+}
+
+function deselectAnswer() {
+  answerEls.forEach((answerEl) => {
+    answerEl.checked = false;
+  });
+}
+
+btnEl.addEventListener("click", () => {
+  const answer = getSelected();
+
+  if (answer) {
+    if (answer === quizData[currentQuiz].correct) {
+      score++;
+    }
+
+    currentQuiz++;
+
+    if (currentQuiz < quizData.length) {
+      loadQuiz();
+    } else {
+      quizEl.innerHTML = `
+      <h2 id="result">Sua pontuação: ${score}/${quizData.length}</h2>
+      <button onclick="location.reload()">Recomeçar</button>
+      `;
+    }
+  }
+});
